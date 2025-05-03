@@ -11,10 +11,7 @@ package yzr.tilemapping;
 public class TilemappingGame {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-
-
-        Tile[][] map = new Tile[50][];
+        Tile[][] map = new Tile[50][50];
 
         for (int i = 0; i < 50; i++) {
             for (int j = 0; j < 50; j++) {
