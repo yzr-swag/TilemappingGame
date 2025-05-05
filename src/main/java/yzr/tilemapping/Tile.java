@@ -3,7 +3,6 @@ package yzr.tilemapping;
 
 //swaag
 
-import java.util.Scanner;
 import java.io.File;
 
 
@@ -13,9 +12,7 @@ public class Tile {
     private static String tileImg = "dirt1.png";
 
     public Tile(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter Tile type");
-        tileType = input.nextLine();
+        //sumin here
     }
 
     public String getTileType(){
@@ -33,7 +30,7 @@ public class Tile {
     }
 
     public void fileTest(){
-        File tileFile = new File("dirt1.png");
+        File tileFile = new File(tileImg);
     }
 
 }
