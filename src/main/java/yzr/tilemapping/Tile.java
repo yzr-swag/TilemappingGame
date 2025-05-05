@@ -4,6 +4,7 @@ package yzr.tilemapping;
 //swaag
 
 import java.util.Scanner;
+import java.io.File;
 
 
 
@@ -30,4 +31,9 @@ public class Tile {
         tileImg = "ocean1";
 
     }
+
+    public void fileTest(){
+        File tileFile = new File("dirt1.png");
+    }
+
 }

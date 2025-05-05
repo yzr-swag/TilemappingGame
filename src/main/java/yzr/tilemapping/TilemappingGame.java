@@ -3,7 +3,6 @@
  */
 
 package yzr.tilemapping;
-//turbo dope swag
 /**
  *
  * @author Joshua
@@ -12,6 +11,7 @@ public class TilemappingGame {
 
     public static void main(String[] args) {
         Tile[][] map = new Tile[50][50];
+        map[1][1].tileFile();
 
         for (int i = 0; i < 50; i++) {
             for (int j = 0; j < 50; j++) {
