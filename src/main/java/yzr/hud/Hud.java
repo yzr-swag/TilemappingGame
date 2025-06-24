@@ -9,7 +9,12 @@ public class Hud {
     int xSize;
     int ySize;
 
-    public void draw(Graphics2D g) {
+    public void drawOverlay(Graphics2D g) {
+        g.setColor(Color.white);
+        g.fillRect(xLocation, yLocation, xSize, ySize);
+    }
+
+    public void drawDefault(Graphics2D g) {
         g.setColor(Color.white);
         g.fillRect(xLocation, yLocation, xSize, ySize);
     }

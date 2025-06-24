@@ -26,7 +26,8 @@ public class GamePanel extends JPanel implements Runnable{
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public Player player = new Player(this, keyH);
-    Timer dashCooldown = new Timer(1000, 700, 20, player.dashCooldown /3, Color.green, "greene.png");
+    Timer dashCooldown = new Timer(1000, 700, 64, 64, player.dashCooldown, Color.green, "src/main/resources/Dash icon.png");
+    //Graphics g1;
 
     public GamePanel() {
 
@@ -41,8 +42,17 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameThread = new Thread(this);
         gameThread.start();
+        //drawDefaults(g1);
     }
 
+    public void drawDefaults(Graphics g){
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D)g;
+
+        dashCooldown.drawDefault(g2);
+        g2.dispose();
+
+    }
 
     @Override
     @SuppressWarnings("CallToPrintStackTrace")
@@ -75,7 +85,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void update() {
 
         player.update();
-        dashCooldown.update(player.dashCooldown / 3);
+        dashCooldown.update(player.dashCooldown);
 
     }
 
@@ -88,7 +98,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         player.draw(g2);
 
-        dashCooldown.draw(g2);
+        dashCooldown.drawDefault(g2);
+        dashCooldown.drawOverlay(g2);
 
         //g2.dispose();
 
