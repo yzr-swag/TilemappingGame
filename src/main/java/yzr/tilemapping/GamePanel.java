@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import yzr.entity.Player;
+import yzr.hud.Timer;
 
 public class GamePanel extends JPanel implements Runnable{
     
@@ -24,12 +25,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Player player = new Player(this, keyH);
-
-    //set default position
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
+    public Player player = new Player(this, keyH);
+    Timer dashCooldown = new Timer(1000, 700, 20, player.dashCooldown /3, Color.green, "greene.png");
 
     public GamePanel() {
 
@@ -55,29 +52,20 @@ public class GamePanel extends JPanel implements Runnable{
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
-        long timer = 0;
-        int drawCount = 0;
 
         while(gameThread != null) {
 
             currentTime = System.nanoTime();
             
             delta += (currentTime - lastTime)  / drawInterval;
-            timer += (currentTime - lastTime);
             lastTime = currentTime;
 
             if (delta >= 1) {
                 update();
                 repaint();
                 delta --;
-                drawCount ++;
             }
 
-            if (timer >= 1000000000) {
-                System.out.println("FPS:" + drawCount);
-                drawCount = 0;
-                timer = 0;
-            } 
 
         }
 
@@ -87,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void update() {
 
         player.update();
+        dashCooldown.update(player.dashCooldown / 3);
 
     }
 
@@ -98,6 +87,8 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D g2 = (Graphics2D)g;
 
         player.draw(g2);
+
+        dashCooldown.draw(g2);
 
         //g2.dispose();
 

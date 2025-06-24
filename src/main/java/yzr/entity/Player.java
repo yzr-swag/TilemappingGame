@@ -11,7 +11,11 @@ public class Player extends Entity{
     
     GamePanel gp;
     KeyHandler keyH;
+    int dashCooldownLength;
+    public int dashCooldown;
+    int dashDistance;
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Player(GamePanel gp, KeyHandler keyH) {
 
         this.gp = gp;
@@ -23,23 +27,50 @@ public class Player extends Entity{
     public void setDefaultValues() {
         x = 100;
         y = 100;
-        speed = 4;
+        speed = 10;
+        dashCooldownLength = 120;
+        dashCooldown = 0;
+        dashDistance = 100;
     }
 
     public void update() {
+        if(dashCooldown >0){
+            dashCooldown -= 1;
+        }
         if(keyH.upPressed == true) {
-            y -= speed;
+            y-= speed;
+            if(keyH.shiftPressed == true & dashCooldown == 0) {
+                y-= dashDistance;
+                dashCooldown = dashCooldownLength;
+            }
         }
         if(keyH.downPressed == true) {
             y += speed;
+            if(keyH.shiftPressed == true & dashCooldown == 0) {
+                y+= dashDistance;
+                dashCooldown = dashCooldownLength;
+            }
         }
         if(keyH.leftPressed == true) {
             x -= speed;
+            if(keyH.shiftPressed == true & dashCooldown == 0) {
+                x-= dashDistance;
+                dashCooldown = dashCooldownLength;
+            }
         }
         if(keyH.rightPressed == true) {
             x += speed;
+            if(keyH.shiftPressed == true & dashCooldown == 0) {
+                x+= dashDistance;
+                dashCooldown = dashCooldownLength;
+            }
         }
+    }
 
+    public int dash(int axis, int direction){
+        int dashTime = dashDistance / speed;
+        axis += dashTime * direction;
+        return axis;
     }
 
     public void draw(Graphics2D g2) {
@@ -47,6 +78,7 @@ public class Player extends Entity{
         g2.setColor(Color.white);
 
         g2.fillRect(x,y, gp.tileSize, gp.tileSize);
+
     }
 
 }
