@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 import javax.swing.JPanel;
 
@@ -11,23 +13,26 @@ import yzr.entity.Player;
 import yzr.hud.Timer;
 
 public class GamePanel extends JPanel implements Runnable{
-    
+
+    //to ensure that all elements can be seen on any size screen #swag
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    int width = gd.getDisplayMode().getWidth();
+    int height = gd.getDisplayMode().getHeight();
+
+    final int maxScreenRow = 24;
     final int originalTileSize = 16;
-    final int scale = 4;
+    final int scale = (width / maxScreenRow) / originalTileSize;
 
     public final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 12;
-    final int maxScreenRow = 24;
-    final int screenWidth = tileSize * maxScreenRow;
-    final int screenHeight = tileSize * maxScreenCol;
+    final int screenWidth = width;
+    final int screenHeight = height;
 
     int FPS= 60;
 
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public Player player = new Player(this, keyH);
-    Timer dashCooldown = new Timer(1000, 700, 64, 64, player.dashCooldown, Color.green, "src/main/resources/Dash icon.png");
-    //Graphics g1;
+    Timer dashCooldown = new Timer(width - 100, 100, (int) (tileSize * 0.75), player.dashCooldownLength, "src/main/resources/Dash icon.png");
 
     public GamePanel() {
 
@@ -42,16 +47,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameThread = new Thread(this);
         gameThread.start();
-        //drawDefaults(g1);
-    }
-
-    public void drawDefaults(Graphics g){
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
-
-        dashCooldown.drawDefault(g2);
-        g2.dispose();
-
     }
 
     @Override
@@ -101,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable{
         dashCooldown.drawDefault(g2);
         dashCooldown.drawOverlay(g2);
 
-        //g2.dispose();
+        g2.dispose();
 
     }
 

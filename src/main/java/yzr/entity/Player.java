@@ -11,9 +11,13 @@ public class Player extends Entity{
     
     GamePanel gp;
     KeyHandler keyH;
-    int dashCooldownLength;
+    public int dashCooldownLength;
     public int dashCooldown;
-    int dashDistance;
+    int dashSpeed;
+    String dashAxis;
+    int dashCount;
+    int dashDirection;
+    int dashLength;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public Player(GamePanel gp, KeyHandler keyH) {
@@ -30,45 +34,62 @@ public class Player extends Entity{
         speed = 10;
         dashCooldownLength = 120;
         dashCooldown = 0;
-        dashDistance = 100;
+        dashSpeed = 80;
+        dashCount = 0;
+        dashDirection = -1;
+        dashLength = 5;
     }
 
     public void update() {
-        if(dashCooldown >0){
+        if (dashCount > 0){
+            if("x".equals(dashAxis)){
+                x += dashSpeed * dashDirection;
+            }else{
+                y += dashSpeed * dashDirection;
+            }
+            dashCount --;
+            dashCooldown = dashCooldownLength;
+        }else{
+            if(dashCooldown >0){
             dashCooldown -= 1;
         }
         if(keyH.upPressed == true) {
             y-= speed;
             if(keyH.shiftPressed == true & dashCooldown == 0) {
-                y-= dashDistance;
-                dashCooldown = dashCooldownLength;
+                dashCount = dashLength;
+                dashAxis = "y";
+                dashDirection = -1;
             }
         }
         if(keyH.downPressed == true) {
             y += speed;
             if(keyH.shiftPressed == true & dashCooldown == 0) {
-                y+= dashDistance;
-                dashCooldown = dashCooldownLength;
+                dashCount = dashLength;
+                dashAxis = "y";
+                dashDirection = 1;
             }
         }
         if(keyH.leftPressed == true) {
             x -= speed;
             if(keyH.shiftPressed == true & dashCooldown == 0) {
-                x-= dashDistance;
-                dashCooldown = dashCooldownLength;
+                dashCount = dashLength;
+                dashAxis = "x";
+                dashDirection = -1;
             }
         }
         if(keyH.rightPressed == true) {
             x += speed;
             if(keyH.shiftPressed == true & dashCooldown == 0) {
-                x+= dashDistance;
-                dashCooldown = dashCooldownLength;
+                dashCount = dashLength;
+                dashAxis = "x";
+                dashDirection = 1;
             }
+        }
         }
     }
 
     public int dash(int axis, int direction){
-        int dashTime = dashDistance / speed;
+        int dashTime = dashSpeed / speed;
         axis += dashTime * direction;
         return axis;
     }
