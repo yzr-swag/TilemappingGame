@@ -29,8 +29,8 @@ public class Player extends Entity{
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        x = 500;
+        y = 500;
         speed = 10;
         dashCooldownLength = 120;
         dashCooldown = 0;
@@ -41,6 +41,20 @@ public class Player extends Entity{
     }
 
     public void update() {
+        
+        //code to normalise diagonal movement 
+        speed = 10;
+        if (keyH.upPressed == true && keyH.leftPressed == true && speed == 10){
+            speed = (int) (Math.sqrt((speed * speed)  / 2));
+        }else if (keyH.upPressed == true && keyH.rightPressed == true && speed == 10){
+            speed = (int) (Math.sqrt((speed * speed)  / 2));
+        }else if (keyH.downPressed == true && keyH.leftPressed == true && speed == 10){
+            speed = (int) (Math.sqrt((speed * speed)  / 2));
+        }else if (keyH.downPressed == true && keyH.rightPressed == true && speed == 10){
+            speed = (int) (Math.sqrt((speed * speed)  / 2));
+        }
+
+        //this does the dashing
         if (dashCount > 0){
             if("x".equals(dashAxis)){
                 x += dashSpeed * dashDirection;
@@ -53,6 +67,8 @@ public class Player extends Entity{
             if(dashCooldown >0){
             dashCooldown -= 1;
         }
+
+        //general movement code
         if(keyH.upPressed == true) {
             y-= speed;
             if(keyH.shiftPressed == true & dashCooldown == 0) {
@@ -88,11 +104,6 @@ public class Player extends Entity{
         }
     }
 
-    public int dash(int axis, int direction){
-        int dashTime = dashSpeed / speed;
-        axis += dashTime * direction;
-        return axis;
-    }
 
     public void draw(Graphics2D g2) {
 

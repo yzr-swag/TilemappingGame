@@ -24,19 +24,17 @@ public class GamePanel extends JPanel implements Runnable{
     final int scale = (width / maxScreenRow) / originalTileSize;
 
     public final int tileSize = originalTileSize * scale;
-    final int screenWidth = width;
-    final int screenHeight = height;
 
     int FPS= 60;
 
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    public Player player = new Player(this, keyH);
-    Timer dashCooldown = new Timer(width - 100, 100, (int) (tileSize * 0.75), player.dashCooldownLength, "src/main/resources/Dash icon.png");
+    Player player = new Player(this, keyH);
+    Timer dashCooldown = new Timer(100, 100, (int) (tileSize), player.dashCooldownLength, "src/main/resources/Dash icon.png");
 
     public GamePanel() {
 
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(width, height));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
@@ -50,7 +48,6 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     @Override
-    @SuppressWarnings("CallToPrintStackTrace")
     public void run() {
         
         double drawInterval = 1000000000 / FPS;
