@@ -27,13 +27,17 @@ public class GamePanel extends JPanel implements Runnable{
 
     int FPS= 60;
 
+    //define gameplay vars
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     Player player = new Player(this, keyH);
-    Timer dashCooldown = new Timer(100, 100, (int) (tileSize), player.dashCooldownLength, "src/main/resources/Dash icon.png");
+    Timer dashCooldown = new Timer((int) (width * 0.075), (int)(height * 0.1), tileSize, player.dashCooldownLength, "src/main/resources/Dash icon.png");
+    Timer shieldCooldown = new Timer((int) (width *0.12), (int)(height * 0.1), tileSize, player.shieldCooldownLength, "src/main/resources/Shield icon.png");
+
 
     public GamePanel() {
 
+        //initialize the window
         this.setPreferredSize(new Dimension(width, height));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -50,11 +54,12 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         
-        double drawInterval = 1000000000 / FPS;
+        double drawInterval = (double) 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
+        //control fps
         while(gameThread != null) {
 
             currentTime = System.nanoTime();
@@ -74,15 +79,18 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
 
-    public void update() {
+    public void update(){
+        //updates each object called
 
         player.update();
         dashCooldown.update(player.dashCooldown);
+        shieldCooldown.update(player.shieldCooldown);
 
     }
 
     @Override
     public void paintComponent(Graphics g) {
+        //draws each object called
 
         super.paintComponent(g);
 
@@ -93,8 +101,11 @@ public class GamePanel extends JPanel implements Runnable{
         dashCooldown.drawDefault(g2);
         dashCooldown.drawOverlay(g2);
 
+        shieldCooldown.drawDefault(g2);
+        shieldCooldown.drawOverlay(g2);
+
         g2.dispose();
 
     }
 
-    }
+}

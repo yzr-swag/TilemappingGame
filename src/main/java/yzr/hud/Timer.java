@@ -23,11 +23,15 @@ public class Timer extends Hud{
     }
 
     public void update(double cooldown){
+        //updates the timer's cooldown bar size
+
         height = (int)((cooldown / (double)defaultCooldown) * (double)size);
     }
 
     @Override
     public void drawOverlay(Graphics2D g) {
+        //draws the cooldown overlay onto the timer
+
         if(height > 0){
             g.drawImage(overlay, xLocation, yLocation, size, size, null, observer);
         }
@@ -36,7 +40,9 @@ public class Timer extends Hud{
 
 
     @Override
-    public void drawDefault(Graphics2D g){ 
-            g.drawImage(imgSrc, xLocation, yLocation, size, size, null, observer);
+    public void drawDefault(Graphics2D g){
+        //draws the background image for the timer
+
+        g.drawImage(imgSrc, xLocation, yLocation, size, size, null, observer);
     }
 }

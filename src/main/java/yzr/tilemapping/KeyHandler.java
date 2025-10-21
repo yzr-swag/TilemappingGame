@@ -10,6 +10,8 @@ public class KeyHandler implements KeyListener{
     public Boolean leftPressed = false;
     public Boolean rightPressed = false;
     public Boolean shiftPressed = false;
+    public Boolean spacePressed = false;
+    public Boolean ctrlPressed = false;
     public String lastPressed = "";
 
     @Override
@@ -18,33 +20,41 @@ public class KeyHandler implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        
+        //returns true if a key is pressed
+
         int code = e.getKeyCode();
 
-        if(code == KeyEvent.VK_W) {
+        if (code == KeyEvent.VK_W) {
             upPressed = true;
             lastPressed = "W";
         }
-        if(code == KeyEvent.VK_S) {
+        if (code == KeyEvent.VK_S) {
             downPressed = true;
             lastPressed = "S";
         }
-        if(code == KeyEvent.VK_A) {
+        if (code == KeyEvent.VK_A) {
             leftPressed = true;
             lastPressed = "A";
         }
-        if(code == KeyEvent.VK_D) {
+        if (code == KeyEvent.VK_D) {
             rightPressed = true;
             lastPressed = "D";
         }
-        if(code == KeyEvent.VK_SHIFT) {
+        if (code == KeyEvent.VK_SHIFT) {
             shiftPressed = true;
+        }
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = true;
+        }
+        if (code == KeyEvent.VK_CONTROL) {
+            ctrlPressed = true;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        
+        //returns false if a key is released
+
         int code = e.getKeyCode();
         if(code == KeyEvent.VK_W) {
             upPressed = false;
@@ -64,6 +74,12 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_SHIFT) {
             shiftPressed = false;
+        }
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = false;
+        }
+        if (code == KeyEvent.VK_CONTROL) {
+            ctrlPressed = false;
         }
     }
 }
