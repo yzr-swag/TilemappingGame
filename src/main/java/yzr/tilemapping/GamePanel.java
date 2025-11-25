@@ -10,14 +10,16 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.JPanel;
 
 import yzr.entity.Player;
+import yzr.hud.PauseScreen;
 import yzr.hud.Timer;
 
 public class GamePanel extends JPanel implements Runnable{
 
     //to ensure that all elements can be seen on any size screen #swag
     GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    int width = gd.getDisplayMode().getWidth();
-    int height = gd.getDisplayMode().getHeight();
+    int width = gd.getDisplayMode().getWidth()/2;
+    int height = gd.getDisplayMode().getHeight()/2;
+
 
     final int maxScreenRow = 24;
     final int originalTileSize = 16;
@@ -25,15 +27,15 @@ public class GamePanel extends JPanel implements Runnable{
 
     public final int tileSize = originalTileSize * scale;
 
-    int FPS= 60;
+    int FPS= 240;
 
     //define gameplay vars
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Player player = new Player(this, keyH);
+    Player player = new Player(this, keyH, FPS, tileSize);
     Timer dashCooldown = new Timer((int) (width * 0.075), (int)(height * 0.1), tileSize, player.dashCooldownLength, "src/main/resources/Dash icon.png");
-    Timer shieldCooldown = new Timer((int) (width *0.12), (int)(height * 0.1), tileSize, player.shieldCooldownLength, "src/main/resources/Shield icon.png");
-
+    Timer shieldCooldown = new Timer((int) ((width *0.075) + (tileSize * 1.25)), (int)(height * 0.1), tileSize, player.shieldCooldownLength, "src/main/resources/Shield icon.png");
+    PauseScreen pauseScreen = new PauseScreen(0,0,width, height,tileSize, keyH);
 
     public GamePanel() {
 
@@ -59,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable{
         long lastTime = System.nanoTime();
         long currentTime;
 
+
         //control fps
         while(gameThread != null) {
 
@@ -68,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable{
             lastTime = currentTime;
 
             if (delta >= 1) {
+
                 update();
                 repaint();
                 delta --;
@@ -82,9 +86,17 @@ public class GamePanel extends JPanel implements Runnable{
     public void update(){
         //updates each object called
 
-        player.update();
-        dashCooldown.update(player.dashCooldown);
-        shieldCooldown.update(player.shieldCooldown);
+        if (pauseScreen.paused == 1){
+
+        }else{
+            player.update();
+            dashCooldown.update(player.dashCooldown);
+            shieldCooldown.update(player.shieldCooldown);
+        }
+
+        pauseScreen.update();
+
+
 
     }
 
@@ -103,6 +115,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         shieldCooldown.drawDefault(g2);
         shieldCooldown.drawOverlay(g2);
+
+        pauseScreen.draw(g2);
 
         g2.dispose();
 

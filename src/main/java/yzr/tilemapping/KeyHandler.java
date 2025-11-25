@@ -13,6 +13,7 @@ public class KeyHandler implements KeyListener{
     public Boolean spacePressed = false;
     public Boolean ctrlPressed = false;
     public String lastPressed = "";
+    public int escTyped = -1;
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -48,6 +49,9 @@ public class KeyHandler implements KeyListener{
         }
         if (code == KeyEvent.VK_CONTROL) {
             ctrlPressed = true;
+        }
+        if(code == KeyEvent.VK_ESCAPE){
+            escTyped = escTyped * -1;
         }
     }
 

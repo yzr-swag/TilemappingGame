@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import java.awt.*;
 
 public class TilemappingGame {
- 
 
     public static void main(String[] args) {
         //creating window and gamePanel

@@ -3,7 +3,8 @@ package yzr.entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import yzr.particle.ParticleHolder;
+import yzr.particle.DashParticleHolder;
+import yzr.particle.ShieldParticleHolder;
 import yzr.tilemapping.GamePanel;
 import yzr.tilemapping.KeyHandler;
 
@@ -12,58 +13,58 @@ public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
 
-    public int dashCooldownLength;
-    public int dashCooldown;
-    int dashSpeed;
-    String dashAxis;
-    int dashTimeRemaining;
-    int dashDirection;
-    int dashLength;
+    int defaultSpeed;
 
-    int shieldLength;
-    public int shieldCooldown;
-    public int shieldCooldownLength;
-    int shieldTimeRemaining;
+    public int dashCooldownLength, dashCooldown;
+    int dashSpeed, dashTimeRemaining, dashDirection, dashLength;
+    String dashAxis;
+
+    int shieldLength, shieldTimeRemaining;
+    public int shieldCooldown, shieldCooldownLength;
     Color shieldColor;
 
     int particleAmount;
     int particleSize;
-    ParticleHolder dashParticleHolder;
+    DashParticleHolder dashParticleHolder;
+
+    ShieldParticleHolder shieldParticleHolder;
 
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public Player(GamePanel gp, KeyHandler keyH) {
+    public Player(GamePanel gp, KeyHandler keyH, int FPS, int tileSize) {
 
         this.gp = gp;
         this.keyH = keyH;
-        setDefaultValues();
+        setDefaultValues(FPS,tileSize);
 
     }
 
-    public void setDefaultValues() {
+    public void setDefaultValues(int FPS,int tileSize) {
         //it's in the name
 
-        x = 500;
-        y = 500;
-        speed = 10;
-
-        dashCooldownLength = 120;
+        x = 100;
+        y = 100;
+        speed = (int)(((double) 500 /FPS) *(0.1*tileSize));
+        defaultSpeed = (int)(((double) 500 /FPS) *(0.1*tileSize));
+//depend speed & dash n shit on tileSiz and FPS
+        dashCooldownLength = 2*FPS;
         dashCooldown = 0;
-        dashSpeed = 40;
+        dashSpeed = 2400/FPS;
         dashTimeRemaining = 0;
         dashDirection = -1;
-        dashLength = 10;
+        dashLength = (int) (0.2*FPS);
 
-        shieldCooldownLength = 180;
+        shieldCooldownLength = 3*FPS;
         shieldCooldown = 0;
         shieldTimeRemaining = 0;
-        shieldLength = 30;
+        shieldLength = (int)(0.75*FPS);
         shieldColor = Color.BLUE;
 
-        particleSize = 8;
+        particleSize = (int)(0.2 * tileSize);
         particleAmount = 25;
 
-        dashParticleHolder = new ParticleHolder(particleAmount, particleSize);
+        dashParticleHolder = new DashParticleHolder(particleAmount, particleSize,tileSize);
+        shieldParticleHolder = new ShieldParticleHolder(particleAmount, particleSize, tileSize);
 
     }
 
@@ -90,6 +91,7 @@ public class Player extends Entity{
         }
 
         else{
+            shieldParticleHolder.disposeParticleHolder();
             dashParticleHolder.disposeParticleHolder();
             if(dashCooldown >0){
             dashCooldown --;
@@ -100,6 +102,7 @@ public class Player extends Entity{
 
         if(keyH.ctrlPressed & shieldCooldown == 0 &  dashTimeRemaining == 0){
             shieldTimeRemaining = shieldLength;
+            shieldParticleHolder.createParticleHolder(x,y);
         }
 
         movementHandler();
@@ -108,7 +111,7 @@ public class Player extends Entity{
 
     public void normaliseMovement(){
         //ensures that diagonal movement is not faster than other movement
-        speed = 10;
+        speed = defaultSpeed;
         if (keyH.upPressed && keyH.leftPressed){
             speed = (int) (Math.sqrt((double) (speed * speed) / 2));
         }else if (keyH.upPressed && keyH.rightPressed){
@@ -128,7 +131,7 @@ public class Player extends Entity{
                 dashTimeRemaining = dashLength;
                 dashAxis = "y";
                 dashDirection = -1;
-                dashParticleHolder.createDashParticleHolder(x,y +50, dashAxis, dashDirection);
+                dashParticleHolder.createParticleHolder(x,y +50, dashAxis, dashDirection);
             }
         }
         if(keyH.downPressed) {
@@ -137,7 +140,7 @@ public class Player extends Entity{
                 dashTimeRemaining = dashLength;
                 dashAxis = "y";
                 dashDirection = 1;
-                dashParticleHolder.createDashParticleHolder(x,y-50,dashAxis, dashDirection);
+                dashParticleHolder.createParticleHolder(x,y-50,dashAxis, dashDirection);
             }
 
         }
@@ -147,7 +150,7 @@ public class Player extends Entity{
                 dashTimeRemaining = dashLength;
                 dashAxis = "x";
                 dashDirection = -1;
-                dashParticleHolder.createDashParticleHolder(x+50,y,dashAxis, dashDirection);
+                dashParticleHolder.createParticleHolder(x+50,y,dashAxis, dashDirection);
             }
         }
         if(keyH.rightPressed) {
@@ -156,23 +159,24 @@ public class Player extends Entity{
                 dashTimeRemaining = dashLength;
                 dashAxis = "x";
                 dashDirection = 1;
-                dashParticleHolder.createDashParticleHolder(x-50,y, dashAxis, dashDirection);
+                dashParticleHolder.createParticleHolder(x-50,y, dashAxis, dashDirection);
             }
         }
     }
 
-    public void draw(Graphics2D g2) {
+    public void draw(Graphics2D g) {
         //it's in the name
         if(shieldTimeRemaining >0) {
-            g2.setColor(shieldColor);
+            g.setColor(shieldColor);
         }else {
 
-            g2.setColor(Color.white);
+            g.setColor(Color.white);
         }
 
-        g2.fillRect(x,y, gp.tileSize, gp.tileSize);
-        //drawParticles(g2);
-        dashParticleHolder.drawParticles(g2);
+        g.fillRect(x,y, gp.tileSize, gp.tileSize);
+        dashParticleHolder.drawParticles(g);
+        shieldParticleHolder.drawParticles(g);
+
     }
 
 }

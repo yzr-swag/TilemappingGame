@@ -45,4 +45,5 @@ public class Timer extends Hud{
 
         g.drawImage(imgSrc, xLocation, yLocation, size, size, null, observer);
     }
+
 }
