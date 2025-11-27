@@ -1,6 +1,8 @@
 package yzr.hud;
 
 import java.awt.*;
+
+import yzr.tilemapping.GamePanel;
 import yzr.tilemapping.KeyHandler;
 
 public class PauseScreen {
@@ -23,27 +25,38 @@ public class PauseScreen {
         this.keyH = keyH;
         paused = -1;
 
+
         rectX = width / 6;
         rectY = height / 8;
-        rectH = height - (tileSize * 8);
+        rectH = height - (height / 4);
         rectW = width - (width/ 3);
 
+        img = Toolkit.getDefaultToolkit().getImage(imgSrc);
 
     }
 
-    public void update(){
+    public int update(int selected){
         paused = keyH.escTyped;
+
         if (paused == 1){
-            img = Toolkit.getDefaultToolkit().getImage(imgSrc);
-        }else{
-            img = null;
+            if (keyH.upPressed == true){
+                if (selected > 1){
+                    selected --;
+                }
+            }else if (keyH.downPressed == true){
+                if(selected < 2){
+                    selected ++;
+                }
+            }
         }
+
+        return selected;
     }
 
     public void draw(Graphics2D g){
         g.drawImage(img, x, y, width, height,null,null);
         g.setColor(Color.GREEN);
-        if (paused ==1){
+        if (paused == 1){
             g.fillRect(rectX,rectY,rectW,rectH);
         }
 

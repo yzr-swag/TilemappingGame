@@ -1,14 +1,16 @@
 package yzr.particle;
 
+import yzr.tilemapping.GamePanel;
+
 import java.awt.*;
 
 public class DashParticleHolder extends ParticleHolder{
     Particle[] myParticleHolder;
     int particleAmount;
     int particleSize;
+    int tileSize;
     int particleX = 0;
     int particleY= 0;
-    int tileSize;
 
     public DashParticleHolder(int amount, int size, int tileSize){
         particleAmount = amount;
@@ -23,12 +25,12 @@ public class DashParticleHolder extends ParticleHolder{
         for(int i = 0; i< particleAmount; i++){
             particleX = x;
             particleY = y;
-            setParticleLoc(dashAxis,dashDirection * -1, tileSize);
+            setParticleLoc(dashAxis,dashDirection * -1);
             myParticleHolder[i] = new Particle(particleSize, particleX, particleY, "src/main/resources/Star Particle.png");
         }
     }
 
-    public void setParticleLoc(String dashAxis, int dashDirection, int tileSize){
+    public void setParticleLoc(String dashAxis, int dashDirection){
         //creates a triangle-ish shape of particles when dashing
         int yMoved;
         int xMoved;

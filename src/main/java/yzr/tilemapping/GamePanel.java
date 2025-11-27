@@ -10,6 +10,7 @@ import java.awt.GraphicsEnvironment;
 import javax.swing.JPanel;
 
 import yzr.entity.Player;
+import yzr.hud.Button;
 import yzr.hud.PauseScreen;
 import yzr.hud.Timer;
 
@@ -27,15 +28,19 @@ public class GamePanel extends JPanel implements Runnable{
 
     public final int tileSize = originalTileSize * scale;
 
-    int FPS= 240;
+    public final int FPS= 75;
 
     //define gameplay vars
     public KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Player player = new Player(this, keyH, FPS, tileSize);
+    Player player = new Player(this, keyH);
     Timer dashCooldown = new Timer((int) (width * 0.075), (int)(height * 0.1), tileSize, player.dashCooldownLength, "src/main/resources/Dash icon.png");
     Timer shieldCooldown = new Timer((int) ((width *0.075) + (tileSize * 1.25)), (int)(height * 0.1), tileSize, player.shieldCooldownLength, "src/main/resources/Shield icon.png");
     PauseScreen pauseScreen = new PauseScreen(0,0,width, height,tileSize, keyH);
+    Button resumeButton = new Button(height,width,1 ,tileSize,"hi", keyH);
+    Button exitButton = new Button(height,width,2 ,tileSize,"hi", keyH);
+    int selected = 1;
+
 
     public GamePanel() {
 
@@ -87,14 +92,15 @@ public class GamePanel extends JPanel implements Runnable{
         //updates each object called
 
         if (pauseScreen.paused == 1){
-
+            keyH.escTyped = resumeButton.update(selected);
+            exitButton.update(selected);
         }else{
             player.update();
             dashCooldown.update(player.dashCooldown);
             shieldCooldown.update(player.shieldCooldown);
         }
 
-        pauseScreen.update();
+        selected = pauseScreen.update(selected);
 
 
 
@@ -116,10 +122,14 @@ public class GamePanel extends JPanel implements Runnable{
         shieldCooldown.drawDefault(g2);
         shieldCooldown.drawOverlay(g2);
 
-        pauseScreen.draw(g2);
+       if (pauseScreen.paused == 1){
+           pauseScreen.draw(g2);
+           resumeButton.draw(g2);
+           exitButton.draw(g2);
+           keyH.upPressed = false;
+       }
 
         g2.dispose();
-
     }
 
 }

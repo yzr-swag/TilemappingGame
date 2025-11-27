@@ -2,15 +2,16 @@
 
 package yzr.particle;
 
+import yzr.tilemapping.GamePanel;
+
 public class ShieldParticleHolder extends ParticleHolder{
 
-    int x,y,tileSize;
+    int x,y, tileSize;
 
     public ShieldParticleHolder(int particleAmount, int particleSize, int tileSize){
         this.particleAmount = particleAmount;
         this.particleSize = particleSize;
         this.tileSize = tileSize;
-
     }
 
     public void createParticleHolder(int x,int y){

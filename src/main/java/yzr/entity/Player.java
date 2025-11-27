@@ -31,40 +31,40 @@ public class Player extends Entity{
 
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public Player(GamePanel gp, KeyHandler keyH, int FPS, int tileSize) {
+    public Player(GamePanel gp, KeyHandler keyH) {
 
         this.gp = gp;
         this.keyH = keyH;
-        setDefaultValues(FPS,tileSize);
+        setDefaultValues();
 
     }
 
-    public void setDefaultValues(int FPS,int tileSize) {
+    public void setDefaultValues() {
         //it's in the name
 
-        x = 100;
-        y = 100;
-        speed = (int)(((double) 500 /FPS) *(0.1*tileSize));
-        defaultSpeed = (int)(((double) 500 /FPS) *(0.1*tileSize));
+        x = 10;
+        y = 10;
+        speed = (int)(((double) 500 /gp.FPS) *(0.1*gp.tileSize));
+        defaultSpeed = (int)(((double) 500 /gp.FPS) *(0.1*gp.tileSize));
 //depend speed & dash n shit on tileSiz and FPS
-        dashCooldownLength = 2*FPS;
+        dashCooldownLength = 2*gp.FPS;
         dashCooldown = 0;
-        dashSpeed = 2400/FPS;
+        dashSpeed = 2400/gp.FPS;
         dashTimeRemaining = 0;
         dashDirection = -1;
-        dashLength = (int) (0.2*FPS);
+        dashLength = (int) (0.2*gp.FPS);
 
-        shieldCooldownLength = 3*FPS;
+        shieldCooldownLength = 3*gp.FPS;
         shieldCooldown = 0;
         shieldTimeRemaining = 0;
-        shieldLength = (int)(0.75*FPS);
+        shieldLength = (int)(0.75*gp.FPS);
         shieldColor = Color.BLUE;
 
-        particleSize = (int)(0.2 * tileSize);
+        particleSize = (int)(0.2 * gp.tileSize);
         particleAmount = 25;
 
-        dashParticleHolder = new DashParticleHolder(particleAmount, particleSize,tileSize);
-        shieldParticleHolder = new ShieldParticleHolder(particleAmount, particleSize, tileSize);
+        dashParticleHolder = new DashParticleHolder(particleAmount, particleSize, gp.tileSize);
+        shieldParticleHolder = new ShieldParticleHolder(particleAmount, particleSize, gp.tileSize);
 
     }
 
@@ -176,6 +176,8 @@ public class Player extends Entity{
         g.fillRect(x,y, gp.tileSize, gp.tileSize);
         dashParticleHolder.drawParticles(g);
         shieldParticleHolder.drawParticles(g);
+
+
 
     }
 
